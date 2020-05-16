@@ -67,7 +67,7 @@
           <Font name="Ubuntu" size="36" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Tambah Barang"/>
+        <Property name="text" type="java.lang.String" value="Data Barang"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="doubleBuffered" type="boolean" value="true"/>
       </Properties>
