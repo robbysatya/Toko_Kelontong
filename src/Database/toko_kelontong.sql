@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 14 Bulan Mei 2020 pada 04.31
--- Versi server: 10.4.11-MariaDB
--- Versi PHP: 7.2.30
+-- Generation Time: May 19, 2020 at 12:17 AM
+-- Server version: 10.1.37-MariaDB
+-- PHP Version: 7.3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -24,7 +25,25 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_barang`
+-- Table structure for table `login`
+--
+
+CREATE TABLE `login` (
+  `username` varchar(30) NOT NULL,
+  `password` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `login`
+--
+
+INSERT INTO `login` (`username`, `password`) VALUES
+('admin', '1234567890');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_barang`
 --
 
 CREATE TABLE `tb_barang` (
@@ -35,10 +54,18 @@ CREATE TABLE `tb_barang` (
   `id_supplier` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `tb_barang`
+--
+
+INSERT INTO `tb_barang` (`id_barang`, `nama_barang`, `harga`, `stok`, `id_supplier`) VALUES
+('gm356', 'gulame', '7000', '777', 'fh21'),
+('sb333', 'segitigablue', '20000', '500', 'rb30');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tb_supplier`
+-- Table structure for table `tb_supplier`
 --
 
 CREATE TABLE `tb_supplier` (
@@ -48,21 +75,18 @@ CREATE TABLE `tb_supplier` (
   `kontak_supplier` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `tb_supplier`
+--
+
+INSERT INTO `tb_supplier` (`id_supplier`, `nama_supplier`, `alamat_supplier`, `kontak_supplier`) VALUES
+('fh21', 'farhan', 'agam', '088820125436'),
+('rb30', 'robby', 'metro', '089763224512');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel 'tb_login'
---
-
-CREATE TABLE `login` (
-  `username` varchar(30) NOT NULL,
-  `password` varchar(30) NOT NULL
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `tb_transaksi`
+-- Table structure for table `tb_transaksi`
 --
 
 CREATE TABLE `tb_transaksi` (
@@ -80,37 +104,37 @@ CREATE TABLE `tb_transaksi` (
 --
 
 --
--- Indeks untuk tabel `tb_barang`
+-- Indexes for table `tb_barang`
 --
 ALTER TABLE `tb_barang`
   ADD PRIMARY KEY (`id_barang`),
   ADD KEY `id_supplier` (`id_supplier`);
 
 --
--- Indeks untuk tabel `tb_supplier`
+-- Indexes for table `tb_supplier`
 --
 ALTER TABLE `tb_supplier`
   ADD PRIMARY KEY (`id_supplier`);
 
 --
--- Indeks untuk tabel `tb_transaksi`
+-- Indexes for table `tb_transaksi`
 --
 ALTER TABLE `tb_transaksi`
   ADD PRIMARY KEY (`id_transaksi`),
   ADD KEY `id_barang` (`id_barang`);
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `tb_barang`
+-- Constraints for table `tb_barang`
 --
 ALTER TABLE `tb_barang`
   ADD CONSTRAINT `tb_barang_ibfk_1` FOREIGN KEY (`id_supplier`) REFERENCES `tb_supplier` (`id_supplier`);
 
 --
--- Ketidakleluasaan untuk tabel `tb_transaksi`
+-- Constraints for table `tb_transaksi`
 --
 ALTER TABLE `tb_transaksi`
   ADD CONSTRAINT `tb_transaksi_ibfk_1` FOREIGN KEY (`id_barang`) REFERENCES `tb_barang` (`id_barang`);
