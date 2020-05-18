@@ -65,7 +65,7 @@ public class Barang extends javax.swing.JFrame {
 
         judul_brg.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
         judul_brg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        judul_brg.setText("Data Barang");
+        judul_brg.setText("Tambah Barang");
         judul_brg.setToolTipText("");
         judul_brg.setDoubleBuffered(true);
 
@@ -99,7 +99,7 @@ public class Barang extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Id Supplier");
 
-        btn_update.setText("Upadate");
+        btn_update.setText("Update");
 
         btn_simpan.setText("Simpan");
 
