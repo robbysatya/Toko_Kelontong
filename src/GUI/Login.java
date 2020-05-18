@@ -9,8 +9,11 @@ package GUI;
  *
  * @author robby
  */
-public class Login extends javax.swing.JFrame {
 
+import java.sql.*;
+import javax.swing.*;
+
+public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Log
      */
