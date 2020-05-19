@@ -61,7 +61,7 @@ public class Pembeli extends javax.swing.JFrame {
 
         judul_brg.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
         judul_brg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        judul_brg.setText("Nama Pembeli");
+        judul_brg.setText("Data Pembeli");
         judul_brg.setToolTipText("");
         judul_brg.setDoubleBuffered(true);
 

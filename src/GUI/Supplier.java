@@ -10,20 +10,25 @@ package GUI;
  * @author LENOVO
  */
 
+import java.sql.*;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 public class Supplier extends javax.swing.JFrame {
     public boolean tambah_data;
+    public Statement st;
+    public ResultSet rs;
     /**
      * Creates new form Supplier
      */
     public Supplier() {
+        setLocationRelativeTo(this);
         initComponents();
-        GetData(); // tampilkan ke grid
+        getData(); // tampilkan ke grid
         tambah_data=true;
     }
 
@@ -36,6 +41,7 @@ public class Supplier extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btn_back = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         txt_id = new javax.swing.JTextField();
         txt_nama = new javax.swing.JTextField();
@@ -50,7 +56,10 @@ public class Supplier extends javax.swing.JFrame {
         btn_edit = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        btn_back1 = new javax.swing.JButton();
         judul_brg = new javax.swing.JLabel();
+
+        btn_back.setText("< Back");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,7 +107,7 @@ public class Supplier extends javax.swing.JFrame {
             }
         });
 
-        btn_edit.setText("Edit");
+        btn_edit.setText("Update");
         btn_edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_editActionPerformed(evt);
@@ -116,36 +125,49 @@ public class Supplier extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
+
+        btn_back1.setText("< Back");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_id, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                            .addComponent(txt_kontak, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                            .addComponent(txt_nama, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                            .addComponent(txt_alamat))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txt_id, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                                    .addComponent(txt_kontak, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                                    .addComponent(txt_nama, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                                    .addComponent(txt_alamat))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 26, Short.MAX_VALUE)
+                                .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 26, Short.MAX_VALUE)
-                        .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)))
+                        .addContainerGap()
+                        .addComponent(btn_back1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
                 .addGap(14, 14, 14))
         );
@@ -153,7 +175,7 @@ public class Supplier extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(36, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -174,7 +196,9 @@ public class Supplier extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_back1))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -213,73 +237,114 @@ public class Supplier extends javax.swing.JFrame {
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
+        Connection conn = Database.Config.getKoneksi();
         tambah_data=true;
-        // mengosongkan textbox
-        txt_alamat.setText("");
-        txt_id.setText("");
-        txt_nama.setText("");
-        txt_kontak.setText("");
+        if(txt_alamat.getText().equals("") || txt_id.getText().equals("") || txt_nama.getText().equals("") || txt_kontak.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Data Masih Kosong");
+        }
         
-        if (tambah_data == true) { // proses simpan
+        else if (tambah_data == true) { // proses simpan
             try {
-                String sql = "insert into supplier values('"+txt_id.getText()+"','"+txt_alamat.getText()+"','"+txt_nama.getText()+"','"+txt_kontak.getText();
-                java.sql.Connection conn = (java.sql.Connection)Database.Config.configDB();
-                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "berhasil disimpan");
+                String sql = "insert into tb_supplier set id_supplier='"+txt_id.getText()+"',nama_supplier='"+txt_nama.getText()+"',alamat_supplier='"+txt_alamat.getText()+"', kontak_supplier='"+txt_kontak.getText()+"'";
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.execute();
+                JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+                getData();
+                // mengosongkan textbox
+                txt_alamat.setText("");
+                txt_id.setText("");
+                txt_nama.setText("");
+                txt_kontak.setText("");
             } catch (SQLException | HeadlessException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-        GetData();
     }//GEN-LAST:event_btn_simpanActionPerformed
 
     private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
         // TODO add your handling code here:
+        Connection conn = Database.Config.getKoneksi();
         tambah_data=true;
-        // mengosongkan textbox
-        txt_alamat.setText("");
-        txt_id.setText("");
-        txt_nama.setText("");
-        txt_kontak.setText("");
-        
-        if (tambah_data==true){ //proses edit
+        if(txt_alamat.getText().equals("") || txt_id.getText().equals("") || txt_nama.getText().equals("") || txt_kontak.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Data Masih Kosong");
+        }
+        else if (tambah_data==true){ //proses edit
             try {
-                String sql = "update karyawan SET id_supplier='"+txt_id.getText()+"',nama_supplier='"+txt_nama.getText()+"',alamat='"+txt_alamat.getText()+"',kontak_supplier='"+txt_kontak.getText();
-                java.sql.Connection conn = (java.sql.Connection)Database.Config.configDB();
-                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "berhasil disimpan");
+                String where = jTable2.getValueAt(jTable2.getSelectedRow(), 0)+"";
+                st = conn.createStatement();
+                st.executeUpdate("update tb_supplier SET nama_supplier='"+txt_nama.getText()+"', alamat_supplier='"+txt_alamat.getText()+"', kontak_supplier='"+txt_kontak.getText() +"'where id_supplier='" + where + "';");
+                JOptionPane.showMessageDialog(null, "Data Berhasil Diubah");
+                getData();
+                
+                // mengosongkan textbox
+                txt_alamat.setText("");
+                txt_id.setText("");
+                txt_nama.setText("");
+                txt_kontak.setText("");
             } catch (SQLException | HeadlessException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-        GetData();
     }//GEN-LAST:event_btn_editActionPerformed
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
+        Connection conn = Database.Config.getKoneksi();
         try { // hapus data
-            String sql ="delete from supplier where id_supplier='"+txt_id.getText()+"'";
-            java.sql.Connection conn = (java.sql.Connection)Database.Config.configDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Data akan dihapus?");
-            tambah_data=true;
-            txt_id.setText("");
-            txt_nama.setText("");
-            txt_alamat.setText("");
-            txt_kontak.setText("");
+            int jawab;
+            if((jawab = JOptionPane.showConfirmDialog(null, "Yakin Ingin Menghapus Data?", "Konfirmasi", JOptionPane.YES_NO_OPTION)) == 0){
+                String sql = ("delete from tb_supplier where id_supplier='"+ jTable2.getValueAt(jTable2.getSelectedRow(), 0)+"'");
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Data berhasil dihapus", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+                getData();
+                
+                // mengosongkan textbox
+                txt_alamat.setText("");
+                txt_id.setText("");
+                txt_nama.setText("");
+                txt_kontak.setText("");
+            }
         } catch (SQLException | HeadlessException e) {}
-        GetData();
     }//GEN-LAST:event_btn_hapusActionPerformed
-    
-    private void GetData(){ // menampilkan data dari database
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        tambah_data = false; // menampilkan data ke textboxt
         try {
-            Connection conn =(Connection)Database.Config.configDB();
+            int row =jTable2.getSelectedRow();
+            String tabel_klik=(jTable2.getModel().getValueAt(row, 0).toString());
+            java.sql.Connection conn =(java.sql.Connection)Database.Config.getKoneksi();
             java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet sql = stm.executeQuery("select * from supplier");
+            java.sql.ResultSet sql = stm.executeQuery("select * from tb_supplier where id_supplier='"+tabel_klik+"'");
+            if(sql.next()){
+                String id = sql.getString("id_supplier");
+                txt_id.setText(id);
+                String nama = sql.getString("nama_supplier");
+                txt_nama.setText(nama);
+                String alamat = sql.getString("alamat_supplier");
+                txt_alamat.setText(alamat);
+                String kontak = sql.getString("kontak_supplier");
+                txt_kontak.setText(kontak);
+            }
+        } catch (SQLException e) {}
+    }//GEN-LAST:event_jTable2MouseClicked
+    
+    private void getData(){ // menampilkan data dari database
+        try {
+            Connection conn =(Connection)Database.Config.getKoneksi();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet sql = stm.executeQuery("select * from tb_supplier");
             jTable2.setModel(DbUtils.resultSetToTableModel(sql));
+            if(sql.next()){
+                String id = sql.getString("id_supplier");
+                txt_id.setText(id);
+                String nama = sql.getString("nama_supplier");
+                txt_nama.setText(nama);
+                String alamat = sql.getString("alamat_supplier");
+                txt_alamat.setText(alamat);
+                String kontak = sql.getString("kontak_supplier");
+                txt_kontak.setText(kontak);
+            }
         }
         catch (SQLException | HeadlessException e) {
         }
@@ -319,15 +384,15 @@ public class Supplier extends javax.swing.JFrame {
         });
     }
     
-    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {
+    private void getTampil() {
     // TODO add your handling code here:
         tambah_data = false; // menampilkan data ke textboxt
         try {
             int row =jTable2.getSelectedRow();
             String tabel_klik=(jTable2.getModel().getValueAt(row, 0).toString());
-            java.sql.Connection conn =(java.sql.Connection)Database.Config.configDB();
+            java.sql.Connection conn =(java.sql.Connection)Database.Config.getKoneksi();
             java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet sql = stm.executeQuery("select * from supplier where id_supplier='"+tabel_klik+"'");
+            java.sql.ResultSet sql = stm.executeQuery("select * from tb_supplier where id_supplier='"+tabel_klik+"'");
             if(sql.next()){
                 String id = sql.getString("id_supplier");
                 txt_id.setText(id);
@@ -342,6 +407,8 @@ public class Supplier extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_back;
+    private javax.swing.JButton btn_back1;
     private javax.swing.JButton btn_edit;
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_simpan;

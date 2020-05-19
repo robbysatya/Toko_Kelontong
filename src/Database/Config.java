@@ -10,19 +10,26 @@ package Database;
  * @author robby
  */
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 public class Config {
-    private static Connection MysqlConfig;
-    public static Connection configDB() throws SQLException{
-        try{
-            String url = "";
-            String user = "root";
-            String pass = "";
-    }catch(SQLException e){
-        System.out.println("Koneksi ke database Gagal " + e.getMessage());
-    }
-}
+    private static Connection koneksi;
+    public static Connection getKoneksi(){
+        if (koneksi == null){
+          try {
+            String url = "jdbc:mysql://localhost:3306/toko_kelontong_jaya"; // nama databasenya login
+            String user="root"; // username mysql root
+            String pass=""; //passwordnya kosong
+
+            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+            koneksi = DriverManager.getConnection(url , user, pass);
+
+            }catch(SQLException t){
+                    System.out.print("Gagal melakukan koneksi ke database");
+                }
+            }
+
+            return koneksi;
+        }
+    } 

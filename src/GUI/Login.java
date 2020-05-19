@@ -5,22 +5,33 @@
  */
 package GUI;
 
+
 /**
  *
  * @author robby
  */
 
+import Database.Config;
 import java.sql.*;
 import javax.swing.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 
 public class Login extends javax.swing.JFrame {
+    //Deklarasi
+
     /**
      * Creates new form Log
      */
     public Login() {
         initComponents();
+        setLocationRelativeTo(this);
+        
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -148,7 +159,27 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_passwordActionPerformed
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
-        // TODO add your handling code here:
+        try {
+            Connection c = Config.getKoneksi();
+            Statement s = c.createStatement();
+            String sql = "SELECT * FROM login WHERE username='"+txt_user.getText()+"' AND password='"+txt_password.getText()+"'";
+            ResultSet r = s.executeQuery(sql);
+            
+            int baris = 0;
+            while(r.next()){
+                baris = r.getRow();
+            }
+            
+            if(baris == 1){
+                JOptionPane.showMessageDialog(null, "Berhasil Login");
+                new Main().setVisible(true);
+                dispose();
+            }else{
+                JOptionPane.showMessageDialog(null, "Gagal Login, Periksa Username dan Password");
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }//GEN-LAST:event_btn_loginActionPerformed
 
     /**

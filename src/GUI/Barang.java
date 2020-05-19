@@ -19,18 +19,25 @@ import java.util.function.Supplier;
 import java.awt.AWTError.*;
 import java.awt.Event.*;
 import javax.swing.*;
+import Database.Config;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 
 
 public class Barang extends javax.swing.JFrame {
     public boolean tambah_data;
+    public Statement st;
+    public ResultSet rs;
     /**
      * Creates new form Barang
      */
     public Barang() {
+        setLocationRelativeTo(this);
         initComponents();
         GetData(); // tampilkan ke grid
         tambah_data=true;
+        tampil_combo();
     }
 
     /**
@@ -61,6 +68,7 @@ public class Barang extends javax.swing.JFrame {
         btn_edi = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        btn_back = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -91,7 +99,12 @@ public class Barang extends javax.swing.JFrame {
             }
         });
 
-        cb_idSup.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_idSup.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Pilih--" }));
+        cb_idSup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_idSupActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -114,10 +127,25 @@ public class Barang extends javax.swing.JFrame {
         jLabel5.setText("Id Supplier");
 
         btn_simpan.setText("Simpan");
+        btn_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpanActionPerformed(evt);
+            }
+        });
 
         btn_hapus.setText("Hapus");
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
-        btn_edi.setText("Edit");
+        btn_edi.setText("Update");
+        btn_edi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ediActionPerformed(evt);
+            }
+        });
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -130,37 +158,55 @@ public class Barang extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
+
+        btn_back.setText("< Back");
+        btn_back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_backActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(49, 49, 49)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_nama, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_harga, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_stok, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cb_idSup, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_edi, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2))
+                                .addGap(49, 49, 49)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txt_nama, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txt_harga, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txt_stok, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cb_idSup, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(23, 23, 23))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_edi, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(45, 45, 45))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btn_back)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -168,7 +214,7 @@ public class Barang extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(29, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -193,7 +239,9 @@ public class Barang extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_edi, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btn_simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_back))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -219,100 +267,152 @@ public class Barang extends javax.swing.JFrame {
     private void txt_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_idActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_idActionPerformed
-    
-    private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {                                           
+
+    private void cb_idSupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_idSupActionPerformed
+        tampil_combo();
+    }//GEN-LAST:event_cb_idSupActionPerformed
+
+    private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
+        Connection conn = Database.Config.getKoneksi();
         tambah_data=true;
-        // mengosongkan textbox
-        txt_id.setText("");
-        txt_nama.setText("");
-        txt_harga.setText("");
-        txt_stok.setText("");
+        if(txt_id.getText().equals("") || txt_nama.getText().equals("") || txt_stok.getText().equals("") || txt_harga.getText().equals("") || cb_idSup.getSelectedItem().equals("")){
+            JOptionPane.showMessageDialog(null, "Data Masih Kosong");
+        }
         
-        if (tambah_data == true) { // proses simpan
+        else if (tambah_data == true) { // proses simpan
             try {
-                String sql = "insert into supplier values('"+txt_id.getText()+"','"+txt_nama.getText()+"','"+txt_harga.getText()+"','"+txt_stok.getText();
-                java.sql.Connection conn = (java.sql.Connection)Database.Config.configDB();
-                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "berhasil disimpan");
+                String sql = "insert into tb_barang set id_barang='"+txt_id.getText()+"',nama_barang='"+txt_nama.getText()+"',harga='"+txt_harga.getText()+"', stok='"+txt_stok.getText()+"', id_supplier='"+cb_idSup.getSelectedItem()+"'";
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.execute();
+                JOptionPane.showMessageDialog(null, "Berhasil Disimpan");
+                getData();
+                // mengosongkan textbox
+                txt_harga.setText("");
+                txt_id.setText("");
+                txt_nama.setText("");
+                txt_stok.setText("");
+                cb_idSup.setSelectedItem("--Pilih--");
             } catch (SQLException | HeadlessException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
-        GetData();
-    }                                          
+    }//GEN-LAST:event_btn_simpanActionPerformed
 
-    private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-        tambah_data=true;
-        // mengosongkan textbox
-        txt_id.setText("");
-        txt_nama.setText("");
-        txt_harga.setText("");
-        txt_stok.setText("");
-        
-        if (tambah_data=true){ //proses edit
-            try {
-                String sql = "update karyawan SET id_supplier='"+txt_id.getText()+"',nama_supplier='"+txt_nama.getText()+"',harga='"+txt_harga.getText()+"',stok='"+txt_stok.getText();
-                java.sql.Connection conn = (java.sql.Connection)Database.Config.configDB();
-                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-                pst.execute();
-                JOptionPane.showMessageDialog(null, "berhasil disimpan");
-            } catch (SQLException | HeadlessException e) {
-                JOptionPane.showMessageDialog(null, e);
-            }
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+    Connection conn = Database.Config.getKoneksi();
+    int jawab;
+    if(txt_id.getText().equals("") || txt_nama.getText().equals("") || txt_stok.getText().equals("") || txt_harga.getText().equals("") || cb_idSup.getSelectedItem().equals("")){
+            JOptionPane.showMessageDialog(null, "Pilih Data Yang Ingin Dihapus");
         }
-        GetData();
-    }                                                                                 
-
-    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
-        try { // hapus data
-            String sql ="delete from supplier where id_supplier='"+txt_id.getText()+"'";
-            java.sql.Connection conn = (java.sql.Connection)Database.Config.configDB();
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Data akan dihapus?");
-            tambah_data=true;
-            txt_id.setText("");
-            txt_nama.setText("");
-            txt_harga.setText("");
-            txt_stok.setText("");
-            
+    try {
+        if((jawab = JOptionPane.showConfirmDialog(null, "Yakin Ingin Menghapus Data?", "Konfirmasi", JOptionPane.YES_NO_OPTION)) == 0){
+           // hapus data
+                String sql = ("delete from tb_barang where id_barang='"+ jTable2.getValueAt(jTable2.getSelectedRow(), 0)+"'");
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Data berhasil dihapus", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+                getData();
+                
+                tambah_data=true;
+                txt_id.setText("");
+                txt_nama.setText("");
+                txt_harga.setText("");
+                txt_stok.setText("");
+                cb_idSup.setSelectedItem("--Pilih--");
+            }
         } catch (SQLException | HeadlessException e) {}
-        GetData();
-    }                                         
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        // TODO add your handling code here:
+        tambah_data = false; // menampilkan data ke textboxt
+        try {
+            int row =jTable2.getSelectedRow();
+            String tabel_klik=(jTable2.getModel().getValueAt(row, 0).toString());
+            java.sql.Connection conn =(java.sql.Connection)Database.Config.getKoneksi();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet sql = stm.executeQuery("select * from tb_barang where id_barang='"+tabel_klik+"'");
+            if(sql.next()){
+                String id = sql.getString("id_barang");
+                txt_id.setText(id);
+                String nama = sql.getString("nama_barang");
+                txt_nama.setText(nama);
+                String harga = sql.getString("harga");
+                txt_harga.setText(harga);
+                String stok = sql.getString("stok");
+                txt_stok.setText(stok);
+                String idSup = sql.getString("id_supplier");
+                cb_idSup.setSelectedItem(idSup);
+            }
+        } catch (SQLException e) {}
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void btn_ediActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ediActionPerformed
+        // TODO add your handling code here:
+        
+        Connection conn = Database.Config.getKoneksi();
+        tambah_data=true;
+        if(txt_id.getText().equals("") || txt_nama.getText().equals("") || txt_stok.getText().equals("") || txt_harga.getText().equals("") || cb_idSup.getSelectedItem().equals("")){
+            JOptionPane.showMessageDialog(null, "Data Masih Kosong");
+        }
+        else if (tambah_data==true){ //proses edit
+            try {
+                String where = jTable2.getValueAt(jTable2.getSelectedRow(), 0)+"";
+                st = conn.createStatement();
+                st.executeUpdate("update tb_barang SET nama_barang='"+txt_nama.getText()+"', harga='"+txt_harga.getText()+"', stok='"+txt_stok.getText()+"', id_supplier='"+cb_idSup.getSelectedItem()+"'where id_barang='" + where + "';");
+                JOptionPane.showMessageDialog(null, "Data Berhasil Diubah");
+                getData();
+                
+                tambah_data=true;
+                txt_id.setText("");
+                txt_nama.setText("");
+                txt_harga.setText("");
+                txt_stok.setText("");
+                cb_idSup.setSelectedItem("--Pilih--");
+            } catch (SQLException | HeadlessException e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }//GEN-LAST:event_btn_ediActionPerformed
+
+    private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
+        new Main().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btn_backActionPerformed
+                                                                  
+                                       
     
     private void GetData(){ // menampilkan data dari database
         try {
-            Connection conn =(Connection)Database.Config.configDB();
+            Connection conn =(Connection)Database.Config.getKoneksi();
             java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet sql = stm.executeQuery("select * from barang");
+            java.sql.ResultSet sql = stm.executeQuery("select * from tb_barang");
             jTable2.setModel(DbUtils.resultSetToTableModel(sql));
         }
         catch (SQLException | HeadlessException e) {
         }
     }
     
-    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {
+    private void getData() {
     // TODO add your handling code here:
-        tambah_data = false; // menampilkan data ke textboxt
+        
         try {
-            int row =jTable2.getSelectedRow();
-            String tabel_klik=(jTable2.getModel().getValueAt(row, 0).toString());
-            java.sql.Connection conn =(java.sql.Connection)Database.Config.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet sql = stm.executeQuery("select * from barang where id_barang='"+tabel_klik+"'");
+            Connection conn = Database.Config.getKoneksi();
+            java.sql.Statement stmt = conn.createStatement();
+            java.sql.ResultSet sql = stmt.executeQuery("select * from tb_barang");
+            jTable2.setModel(DbUtils.resultSetToTableModel(sql));
             if(sql.next()){
                 String id = sql.getString("id_barang");
                 txt_id.setText(id);
                 String nama = sql.getString("nama_barang");
                 txt_nama.setText(nama);
-                String harga = sql.getString("harga_barang");
+                String harga = sql.getString("harga");
                 txt_harga.setText(harga);
-                String stok = sql.getString("stok_barang");
+                String stok = sql.getString("stok");
                 txt_stok.setText(stok);
+                String idSup = sql.getString("id_supplier");
+                cb_idSup.setSelectedItem(idSup);
             }
         } catch (SQLException e) {}
     }
@@ -348,8 +448,28 @@ public class Barang extends javax.swing.JFrame {
             new Barang().setVisible(true);
         });
     }
-
+    
+     public void tampil_combo()
+    {
+        try {
+        Connection conn = Database.Config.getKoneksi();
+        Statement stmt = conn.createStatement();
+        String sql = "select * from tb_supplier";  
+        ResultSet res = stmt.executeQuery(sql);
+        
+        while(res.next()){
+            cb_idSup.addItem(res.getString("id_supplier"));
+        }
+            res.last();
+            int jumlahdata = res.getRow();
+            res.first();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }              
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_back;
     private javax.swing.JButton btn_edi;
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_simpan;
