@@ -304,7 +304,7 @@ public class Barang extends javax.swing.JFrame {
     int jawab;
     if(txt_id.getText().equals("") || txt_nama.getText().equals("") || txt_stok.getText().equals("") || txt_harga.getText().equals("") || cb_idSup.getSelectedItem().equals("")){
             JOptionPane.showMessageDialog(null, "Pilih Data Yang Ingin Dihapus");
-        }
+        }else{
     try {
         if((jawab = JOptionPane.showConfirmDialog(null, "Yakin Ingin Menghapus Data?", "Konfirmasi", JOptionPane.YES_NO_OPTION)) == 0){
            // hapus data
@@ -321,7 +321,7 @@ public class Barang extends javax.swing.JFrame {
                 txt_stok.setText("");
                 cb_idSup.setSelectedItem("--Pilih--");
             }
-        } catch (SQLException | HeadlessException e) {}
+        } catch (SQLException | HeadlessException e) {}}
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
@@ -398,7 +398,7 @@ public class Barang extends javax.swing.JFrame {
     // TODO add your handling code here:
         
         try {
-            Connection conn = Database.Config.getKoneksi();
+            Connection conn = (Connection)Database.Config.getKoneksi();
             java.sql.Statement stmt = conn.createStatement();
             java.sql.ResultSet sql = stmt.executeQuery("select * from tb_barang");
             jTable2.setModel(DbUtils.resultSetToTableModel(sql));

@@ -295,6 +295,9 @@ public class Supplier extends javax.swing.JFrame {
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
         // TODO add your handling code here:
         Connection conn = Database.Config.getKoneksi();
+            if(txt_id.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Pilih Data Yang Ingin Dihapus");
+        }else{
         try { // hapus data
             int jawab;
             if((jawab = JOptionPane.showConfirmDialog(null, "Yakin Ingin Menghapus Data?", "Konfirmasi", JOptionPane.YES_NO_OPTION)) == 0){
@@ -310,7 +313,7 @@ public class Supplier extends javax.swing.JFrame {
                 txt_nama.setText("");
                 txt_kontak.setText("");
             }
-        } catch (SQLException | HeadlessException e) {}
+        } catch (SQLException | HeadlessException e) {}}
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
