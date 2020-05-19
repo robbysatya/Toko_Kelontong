@@ -33,11 +33,11 @@ public class Barang extends javax.swing.JFrame {
      * Creates new form Barang
      */
     public Barang() {
-        setLocationRelativeTo(this);
         initComponents();
         GetData(); // tampilkan ke grid
         tambah_data=true;
         tampil_combo();
+        setLocationRelativeTo(this);
     }
 
     /**

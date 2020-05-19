@@ -26,10 +26,10 @@ public class Supplier extends javax.swing.JFrame {
      * Creates new form Supplier
      */
     public Supplier() {
-        setLocationRelativeTo(this);
         initComponents();
         getData(); // tampilkan ke grid
         tambah_data=true;
+        setLocationRelativeTo(this);
     }
 
     /**
@@ -133,6 +133,11 @@ public class Supplier extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         btn_back1.setText("< Back");
+        btn_back1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_back1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -328,6 +333,11 @@ public class Supplier extends javax.swing.JFrame {
             }
         } catch (SQLException e) {}
     }//GEN-LAST:event_jTable2MouseClicked
+
+    private void btn_back1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_back1ActionPerformed
+       new Main().setVisible(true);
+       dispose();
+    }//GEN-LAST:event_btn_back1ActionPerformed
     
     private void getData(){ // menampilkan data dari database
         try {
